@@ -21,9 +21,10 @@ body('password', 'Password must be more then 5 char').isLength({min: 5})
 
         let user  = await User.findOne({email:req.body.email});
         if(user){
-           return res.status(200).json({msg:"Sorry! this Email already exiest"});
+           return res.status(200).json({msg:"Sorry! this Email already exiest",success:false});
         }
         // Encrypting User password
+        console.log("First debug test",req.body.password);
         var encPass = CryptoJS.AES.encrypt(req.body.password, "fromthemackersofhackerstower").toString();
 
         user = await User.create({
@@ -40,9 +41,9 @@ body('password', 'Password must be more then 5 char').isLength({min: 5})
         }
 
         const authtoken = jwt.sign(data,JWT_SECRET);
-        return res.status(200).json({authtoken:authtoken});
+        return res.status(200).json({authtoken:authtoken,success:true});
     }else{
-       return res.json({message:"You can not access this api"});
+       return res.json({message:"You can not access this api",success:true});
     }
 });
 
@@ -57,7 +58,7 @@ router.post('/login', [
     try {
         let user = await User.findOne({email});
         if(!user){
-            return res.status(200).json({error:"Invalid Credentials"})
+            return res.status(200).json({msg:"Invalid Credentials",success:false})
         }else{
             // Decrypt password
            
@@ -75,21 +76,21 @@ router.post('/login', [
                 }
             try {
                 const auhtoken = jwt.sign(data,JWT_SECRET);
-                return res.status(200).json({authtoken:auhtoken})
+                return res.status(200).json({authtoken:auhtoken,success:true})
             } catch (error) {
                 
-                return res.status(500).json({error:"Internal Server Error pls try after some time"});
+                return res.status(500).json({msg:"Internal Server Error pls try after some time",success:false});
             }
               //  const authtoken = jwt.sign(data,JWT_SECRET);
                 
                 
                 
             }else{
-                return res.status(200).json({error:"Invalid Credentials"});
+                return res.status(200).json({msg:"Invalid Credentials",success:false});
             }
         }
     } catch (error) {
-        return res.status(500).json({error:"Internal Server Error pls try after some time"});
+        return res.status(500).json({msg:"Internal Server Error pls try after some time",success:false});
     }
 
 

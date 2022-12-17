@@ -15,7 +15,7 @@ router.get('/getallnotes',fetchuser, async(req,res)=>{
     }
 });
 
-router.get('/addnote', fetchuser,
+router.post('/addnote', fetchuser,
 [
     body('title','Title must be atleast 5 char').isLength({min: 5}),
     body('description','Description must be atleast 7 char').isLength({min: 7})
@@ -59,10 +59,16 @@ router.put('/update/:id', fetchuser, async (req,res)=>{
     }
 
     if(note.user.toString() == req.user.id){
+        try {
+            note = await Note.findByIdAndUpdate(req.params.id, {$set: newNote});
+            return res.status(200).json({message:"Note has been successfully updated"});
+        } catch (error) {
+            return res.status(200).json({error:"Internal Server Error"});
+        }
         
-         note = await Note.findByIdAndUpdate(req.params.id, {$set: newNote});
          
-         return res.status(200).json(note);
+         
+         
     }else{
         return res.status(200).json({error:"Not allow"});
     }

